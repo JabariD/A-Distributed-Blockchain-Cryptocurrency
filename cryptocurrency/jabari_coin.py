@@ -332,38 +332,5 @@ def add_transaction():
     response = {'message': f"This transaction will be added to Block {index}"}
     return jsonify(response), 201 # HTTP created
 
-
-## Part 3 - Decentralize our Blockchain
-
-# Connect new nodes to our network
-@app.route('/connect_node', methods=['POST'])
-def connect_node():
-    # get values from JSON FILE (how 2 computers can communicate!)
-    json = request.get_json()
-    # get addresses to add to our network
-    nodes = json.get('nodes')
-    if nodes is None:
-        return "No nodes in request to add to network", 400
-    
-    # add each node given in request to each blockchain's network
-    for node in nodes:
-        blockchain.add_node(node)
-    
-    # return response
-    response = {"message": "Successfully added nodes to network", "total_nodes":list(blockchain.nodes)}
-    return jsonify(response), 201
-
-# Replacing the chain by the longest chain if needed
-@app.route('/replace_chain', methods=['GET'])
-def replace_chain():
-    chain_was_replaced = blockchain.replace_chain()
- 
-    response = {'chain_was_replaced': chain_was_replaced, 
-                'chain': blockchain.chain}
-
-    
-    return jsonify(response), 200
-    
-
 # Running the app
 app.run(host='0.0.0.0', port=5000)
